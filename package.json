@@ -1,0 +1,24 @@
+{
+  "name": "AnotaAI",
+  "version": "1.0.0",
+  "description": "<h1>Backend Analyst Candidate Testing</h1>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rafaelmkp/test-backend-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rafaelmkp/test-backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/Rafaelmkp/test-backend-nodejs#readme",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
