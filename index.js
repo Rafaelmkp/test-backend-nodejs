@@ -24,17 +24,34 @@ app.use(express.json());
 app.use('/products', productsRouter);
 
 app.listen(3000, async () => {
+  //verifiying existence of products.json
   try {
     await readFile('products.json');
     logger.info('API Started!');
   } catch (err) {
-    const initialJson = {
+    const productsJson = {
       nextId: 1,
       products: [],
     };
     try {
-      writeFile('products.json', JSON.stringify(initialJson));
-      logger.info('API Started and File Created!');
+      writeFile('products.json', JSON.stringify(productsJson));
+      logger.info('API Started and Products File Created!');
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  //verifiying existence of categories.json
+  try {
+    await readFile('categories.json');
+  } catch (err) {
+    const catgoriesJson = {
+      nextId: 1,
+      categories: [],
+    };
+    try {
+      writeFile('categories.json', JSON.stringify(catgoriesJson));
+      logger.info('API Started and Category File Created!');
     } catch (err) {
       logger.error(err);
     }
