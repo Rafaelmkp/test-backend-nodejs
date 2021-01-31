@@ -82,24 +82,23 @@ router.post('/new-category', async (req, res, next) => {
   }
 });
 
-router.put('/edit-category/:category', async (req, res, next) => {
+router.put('/edit-category/', async (req, res, next) => {
   try {
-    if (!req.params.category || req.body.newName) {
+    if (!req.body.id || req.body.newName) {
       throw new Error('Missing required parameters.');
     }
 
-    let editCategory = req.params.category;
-    let newName = req.body;
+    let editCategory = req.body;
     const categories = JSON.parse(await readFile(global.fileCategories));
 
-    const index = categories.categories.findIndex(
-      (cat) => cat.name === editCategory
+    const isIndex = categories.categories.findIndex(
+      (cat) => cat.id === parseInt(editCategory.id)
     );
-    if (index === -1) {
+    if (isIndex === -1) {
       throw new Error('Category not found.');
     }
 
-    categories.categories[index].name = newName;
+    categories.categories[isIndex].name = newName;
 
     //todo: change related category products too
 
@@ -124,26 +123,20 @@ router.get('/all', async (_req, res, next) => {
   }
 });
 
-router.get('/:title', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const products = JSON.parse(await readFile(global.fileProducts));
 
     const index = products.products.findIndex(
-      (prd) => prd.title === req.params.title
+      (prd) => prd.id === parseInt(req.params.title)
     );
     if (index === -1) {
       throw new Error('Product not found.');
     }
 
-    //Considering its not permitted to deliver the id to the user
-    const product = {
-      title: products.products[index].title,
-      description: products.products[index].description,
-      price: products.products[index].price,
-      category: products.products[index].category,
-    };
+    const product = products.products[index];
 
-    global.logger.info(`GET /products/:name - ${product.title}`);
+    global.logger.info(`GET /products/:name - ${product.id}`);
     res.send(product);
   } catch (err) {
     next(err);
@@ -158,18 +151,8 @@ router.get('/:category', async (req, res, next) => {
       (prd) => prd.category === req.params.category
     );
 
-    //Considering its not permitted to deliver the id to the user
-    const mappedFilteredProds = filteredProds.map((prod) => {
-      return {
-        title: prod.title,
-        description: prod.description,
-        price: prod.price,
-        category: prod.category,
-      };
-    });
-
     global.logger.info(`GET /products/:category - ${req.params.category}`);
-    res.send(mappedFilteredProds);
+    res.send(filteredProds);
   } catch (err) {
     next(err);
   }
@@ -180,6 +163,7 @@ router.patch('/edit-product', async (req, res, next) => {
     let edditedProduct = req.body;
 
     if (
+      !edditedProduct.id ||
       !edditedProduct.title ||
       !edditedProduct.description ||
       !edditedProduct.price ||
@@ -191,12 +175,13 @@ router.patch('/edit-product', async (req, res, next) => {
     const products = JSON.parse(await readFile(global.fileProducts));
 
     const index = products.products.findIndex(
-      (prd) => prd.title === edditedProduct.title
+      (prd) => prd.id === parseInt(edditedProduct.id)
     );
     if (index === -1) {
       throw new Error('Product not found.');
     }
 
+    products.products[index].title = edditedProduct.title;
     products.products[index].description = edditedProduct.description;
     products.products[index].price = edditedProduct.price;
     products.products[index].category = edditedProduct.category;
@@ -210,16 +195,16 @@ router.patch('/edit-product', async (req, res, next) => {
   }
 });
 
-router.delete('/delete/:title', async (req, res, next) => {
+router.delete('/delete/:id', async (req, res, next) => {
   try {
-    if (!req.params.title) {
+    if (!req.params.id) {
       throw new Error('Missing required parameters.');
     }
 
     const products = JSON.parse(await readFile(global.fileProducts));
 
     const isIndex = products.products.findIndex((prd) => {
-      prd.title === req.params.title;
+      prd.id === req.params.id;
     });
     if (index === -1) {
       throw new Error('Product not found.');
