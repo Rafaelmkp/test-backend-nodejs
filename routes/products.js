@@ -113,15 +113,20 @@ router.put('/edit-category/:category', async (req, res, next) => {
   }
 });
 
-router.get('/products', (req, res, next) => {
+router.get('/all', async (_req, res, next) => {
   try {
+    const products = await readFile(global.fileProducts);
+
+    global.logger.info(`GET /products/all`);
+    res.send(products.products);
   } catch (err) {
     next(err);
   }
 });
 
-router.get('/products/:name', (req, res, next) => {
+router.get('/:name', async (req, res, next) => {
   try {
+    const products = await readFile(global.fileProducts);
   } catch (err) {
     next(err);
   }
