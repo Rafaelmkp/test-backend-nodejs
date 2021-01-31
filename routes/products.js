@@ -103,7 +103,7 @@ router.put('/edit-category/:category', async (req, res, next) => {
 
     //todo: change related category products too
 
-    await writeFile(global.fileCategories, categories, null, 2);
+    await writeFile(global.fileCategories, JSON.stringify(categories, null, 2));
 
     global.logger.info(`PUT /edit-category - ${editCategory}`);
     const resString = `Category successfully edited.`;
@@ -115,7 +115,7 @@ router.put('/edit-category/:category', async (req, res, next) => {
 
 router.get('/all', async (_req, res, next) => {
   try {
-    const products = await readFile(global.fileProducts);
+    const products = JSON.parse(await readFile(global.fileProducts));
 
     global.logger.info(`GET /products/all`);
     res.send(products.products);
@@ -126,7 +126,7 @@ router.get('/all', async (_req, res, next) => {
 
 router.get('/:title', async (req, res, next) => {
   try {
-    const products = await readFile(global.fileProducts);
+    const products = JSON.parse(await readFile(global.fileProducts));
 
     const index = products.products.findIndex(
       (prd) => prd.title === req.params.title
@@ -152,7 +152,7 @@ router.get('/:title', async (req, res, next) => {
 
 router.get('/:category', async (req, res, next) => {
   try {
-    const products = await readFile(global.fileProducts);
+    const products = JSON.parse(await readFile(global.fileProducts));
 
     const filteredProds = products.products.filter(
       (prd) => prd.category === req.params.category
@@ -175,8 +175,20 @@ router.get('/:category', async (req, res, next) => {
   }
 });
 
-router.patch('/edit-product/:title', async (req, res, next) => {
+router.patch('/edit-product', async (req, res, next) => {
   try {
+    let edditedProduct = req.body;
+
+    if (
+      !edditedProduct.title ||
+      !edditedProduct.description ||
+      !edditedProduct.price ||
+      !edditedProduct.category
+    ) {
+      throw new Error('Missing required parameters.');
+    }
+
+    const products = JSON.parse(await readFile(global.fileProducts));
   } catch (err) {
     next(err);
   }
