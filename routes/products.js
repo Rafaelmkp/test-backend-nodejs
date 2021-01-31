@@ -143,7 +143,7 @@ router.get('/:title', async (req, res, next) => {
       category: products.products[index].category,
     };
 
-    global.logger.info(`GET - /products/:name - ${product.title}`);
+    global.logger.info(`GET /products/:name - ${product.title}`);
     res.send(product);
   } catch (err) {
     next(err);
@@ -168,7 +168,7 @@ router.get('/:category', async (req, res, next) => {
       };
     });
 
-    global.logger.info(`GET - /products/:category - ${req.params.category}`);
+    global.logger.info(`GET /products/:category - ${req.params.category}`);
     res.send(mappedFilteredProds);
   } catch (err) {
     next(err);
@@ -189,6 +189,22 @@ router.patch('/edit-product', async (req, res, next) => {
     }
 
     const products = JSON.parse(await readFile(global.fileProducts));
+
+    const index = products.products.findIndex(
+      (prd) => prd.title === edditedProduct.title
+    );
+    if (index === -1) {
+      throw new Error('Product not found.');
+    }
+
+    products.products[index].description = edditedProduct.description;
+    products.products[index].price = edditedProduct.price;
+    products.products[index].category = edditedProduct.category;
+    await writeFile(global.fileProducts, JSON.stringify(products, null, 2));
+
+    global.logger.info(`PATCH /edit-product ${edditedProduct.title}`);
+    const resString = `Product successfully edited.`;
+    res.send(resString);
   } catch (err) {
     next(err);
   }
@@ -202,7 +218,7 @@ router.delete('/delete/:title', (req, res, next) => {
 });
 
 router.use((err, req, res) => {
-  global.logger.error(`${req.method} ${req.baseUrl} ${err.message}`);
+  global.logger.error(`${req.method} ${req.baseUrl} - ${err.message}`);
   res.status(400).send({ error: err.message });
 });
 
