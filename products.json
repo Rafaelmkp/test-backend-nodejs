@@ -1,1 +1,26 @@
-{"nextId":1,"products":[]}
+{
+  "nextId": 4,
+  "products": [
+    {
+      "id": 1,
+      "title": "Smartphone brand xy",
+      "description": "Processor 660 6gb RAM",
+      "price": 1500,
+      "category": "smartphone"
+    },
+    {
+      "id": 2,
+      "title": "Smartphone brand xy",
+      "description": "Processor 660 6gb RAM",
+      "price": 1500,
+      "category": "smartphone"
+    },
+    {
+      "id": 3,
+      "title": "SmartRB brand123",
+      "description": "LED 42",
+      "price": 2300,
+      "category": "tv"
+    }
+  ]
+}

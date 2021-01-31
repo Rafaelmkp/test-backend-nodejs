@@ -1,1 +1,17 @@
-{"nextId":1,"categories":[]}
+{
+  "nextId": 4,
+  "categories": [
+    {
+      "id": 1,
+      "name": "smartphone"
+    },
+    {
+      "id": 2,
+      "name": "notebook"
+    },
+    {
+      "id": 3,
+      "name": "tv"
+    }
+  ]
+}

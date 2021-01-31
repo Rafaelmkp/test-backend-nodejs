@@ -1,40 +1,99 @@
-<h1>Backend Analyst Candidate Testing</h1>
+# Product Catalog API
 
-Hello dear developer, in this test we will analyze your general knowledge and even speed of development. Below we will explain everything that will be needed.
-Do not be alarmed, we do not expect everyone to be able to complete all tasks, this test is the same presented for candidates of all experience levels, so do what you can without worry.
+##### Important Documents
 
-<strong>The challenge</strong>
+[Portuguese README](/LEIAME.md)
+[Unit Tests](/Unit-Tests.md)
 
-Your challenge is to develop an API, using Node.JS, for a product catalog management application. Thus, you must analyze and convert the user stories below into routes of an application.
- 
-<strong>User stories:</strong>
+##### Introduction
 
-- As a user I would like to register a product so that I can have access to the data of this product in the future (Title, description, price, category)
-- I as a user would like to be able to associate and edit a product category;
-- As a user I would like to be able to access the list of all products;
-- As a user I would like to be able to filter products by name or category;
-- I as a user would like to be able to update the product data;
-- I as a user would like to be able to delete a product from my catalog;
- 
-<strong>Instructions</strong>
-- <strong>To start the test, <strong>fork</strong> this repository, create a branch with its full name and then and send us the link to the test performed (link to your repository) . If you just clone the repository you will not be able to push and then it will be more complicated to make the pull request.</strong>
-- The choice of libraries, databases, architecture, etc. is at your discretion.
-- Change the README file explaining what it takes to run your application.
-- Paste the branch name into the GUPY system and indicate the completion of the test
-- If you want you can leave us feedback regarding the test
+This is an API for a product catalog management. It includes basic operations, such as creating and editing products, according to the user stories below.
+Data persistency is made with JSON files.
 
- 
-<strong>Our analysis</strong>
-- Knowledge of Javascript, NodeJs, Express will be assessed for this position;
-- We'll look at how you structure the:
-  application layers;
-  outgoing calls,
-  environment variables,
-   cache,
-  unit tests,
-  logs;
-  error handling;
-  documentation.
-- Code organization, module separation, readability and comments.
-- Commit history.
-- The use of MongoDB is a differentiator
+### Content:
+
+-[1. User Stories](#item1)  
+-[2. Endpoints and paremeters](#item2)  
+-[3. Tools and Technologies](#item3)
+
+### <a name="item1"></a> 1. User Stories
+
+> <a name="item11"></a>1.1 - As a user I would like to register a product so that I can have access to the data of this product in the future (Title, description, price, category);
+
+> <a name="item12"></a>1.2 - I as a user would like to be able to associate and edit a product category;
+
+> <a name="item13"></a>1.3 - As a user I would like to be able to access the list of all products;
+
+> <a name="item14"></a>1.4 - As a user I would like to be able to filter products by name or category;
+
+> <a name="item15"></a>1.5 - I as a user would like to be able to update the product data;
+
+> <a name="item16"></a>1.6 - I as a user would like to be able to delete a product from my catalog;
+
+### <a name="item2"></a> 2. Endpoints and paremeters
+
+| Method | Endpoint                | Purpose                               | Related User Story |
+| ------ | ----------------------- | ------------------------------------- | ------------------ |
+| POST   | /products/new-product   | To create a new product               | [[1](#item11)]     |
+| POST   | /products/new-category  | To create a new category              | [[2](#item12)]     |
+| PUT    | /products/edit-category | To modify an existent category        | [[2](#item12)]     |
+| GET    | /products/all           | To query all existing products        | [[3](#item13)]     |
+| GET    | /products/:id           | To query a given product              | [[4](#item14)]     |
+| GET    | /products/:category     | To query products of a given category | [[4](#item14)]     |
+| PATCH  | /products/edit-product  | To modify an existent product         | [[5](#item15)]     |
+| DELETE | /products/delete/:id    | To delete a given product             | [[6](#item16)]     |
+
+#### Required parameters
+
+##### /products/new-product:
+
+-title _(body)_
+-description _(body)_
+-price _(body)_
+-category _(body)_
+_Note:_ Endpoint will only work with existing categories.
+
+##### /products/new-category:
+
+-name _(body)_
+
+##### /products/edit-category:
+
+-id _(body)_
+-name _(body)_
+
+##### /products/all
+
+_(none)_
+
+##### /products/:id
+
+-id _(url)_
+
+##### /products/:category
+
+-id _(url)_
+
+##### /products/edit-product:
+
+-id _(body)_
+-title _(body)_
+-description _(body)_
+-price _(body)_
+-category _(body)_  
+_Note:_ Endpoint will only work with existing categories.
+
+##### /products/delete/:id
+
+-id _(url)_
+
+### <a name="item3"></a> 3. Tools and Tecnologies
+
+| Name       | Purpose/description |
+| ---------- | ------------------- |
+| JavaScript | Core technology     |
+| NodeJS     | Server              |
+| ExpressJS  | Library - endpoints |
+| Winston    | Library - logger    |
+| VS Code    | Text editor         |
+| Insomnia   | Endpoint tests      |
