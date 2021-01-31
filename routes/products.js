@@ -33,7 +33,7 @@ router.post('/new-product', async (req, res, next) => {
       id: products.nextId,
       title: newProduct.title,
       description: newProduct.description,
-      price: newProduct.price,
+      price: parseInt(newProduct.price),
       category: newProduct.category,
     };
 
@@ -44,10 +44,8 @@ router.post('/new-product', async (req, res, next) => {
     global.logger.info(
       `POST /products/new-product - ${JSON.stringify(newProduct)}`
     );
-    const resString = `New Product - Title: ${newProduct.title}, 
-      Description: ${newProduct.description}, Price: ${newProduct.price}, 
-      Category: ${newProduct.category}.`;
-    req.send(resString);
+    const resString = `New Product - ${JSON.stringify(newProduct)}.`;
+    res.send(resString);
   } catch (err) {
     next(err);
   }
@@ -221,7 +219,7 @@ router.delete('/delete/:id', async (req, res, next) => {
   }
 });
 
-router.use((err, req, res) => {
+router.use((err, req, res, next) => {
   global.logger.error(`${req.method} ${req.baseUrl} - ${err.message}`);
   res.status(400).send({ error: err.message });
 });
