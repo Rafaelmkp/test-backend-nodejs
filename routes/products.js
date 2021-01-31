@@ -127,6 +127,13 @@ router.get('/all', async (_req, res, next) => {
 router.get('/:name', async (req, res, next) => {
   try {
     const products = await readFile(global.fileProducts);
+
+    const index = products.products.findIndex(
+      (prd) => prd.title === req.params.name
+    );
+    if (index === -1) {
+      throw new Error('Category not found.');
+    }
   } catch (err) {
     next(err);
   }
