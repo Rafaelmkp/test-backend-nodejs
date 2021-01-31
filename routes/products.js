@@ -1,5 +1,5 @@
 import express from 'express';
-import { promises as fs } from 'fs';
+import { promises as fs, write } from 'fs';
 
 const { readFile, writeFile } = fs;
 const router = express.Router();
@@ -50,21 +50,98 @@ router.post('/new-product', async (req, res, next) => {
   }
 });
 
-router.post('/new-category', (req, res, next) => {});
+router.post('/new-category', async (req, res, next) => {
+  try {
+    let newCategory = req.body;
+
+    if (!newCategory.name) {
+      throw new Error('Missing required parameters.');
+    }
+
+    const categories = JSON.parse(await readFile(global.fileCategories));
+
+    newCategory = {
+      id: categories.nextId,
+      name: newCategory.name,
+    };
+
+    categories.categories.push(newCategory);
+    categories.nextId++;
+    await writeFile(global.fileCategories, JSON.stringify(categories, null, 2));
+
+    const resString = `New category added - Name: ${newCategory.name}`;
+    res.send(resString);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/edit-category/:category', async (req, res, next) => {
+  try {
+    if (!req.params.category || req.body.newName) {
+      throw new Error('Missing required parameters.');
+    }
+
+    let editCategory = req.params.category;
+    let newName = req.body;
+    const categories = JSON.parse(await readFile(global.fileCategories));
+
+    const index = categories.categories.findIndex(
+      (cat) => cat.name === editCategory
+    );
+    if (index === -1) {
+      throw new Error('Category not found.');
+    }
+
+    categories.categories[index].name = newName;
+
+    //todo: change related category products too
+
+    await writeFile(global.fileCategories, categories, null, 2);
+
+    global.logger.info(`PUT /edit-category - ${editCategory}`);
+    const resString = `Category successfully edited.`;
+    res.send(resString);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/products', (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/products/:name', (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/products/:category', (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
 
 //suggestion: use patch nd put
-router.patch('/edit-category/:category', (req, res, next) => {});
+router.patch('/edit-product/:name', (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.get('/products', (req, res, next) => {});
-
-router.get('/products/:name', (req, res, next) => {});
-
-router.get('/products/:category', (req, res, next) => {});
-
-//suggestion: use patch nd put
-router.patch('/edit-product/:name', (req, res, next) => {});
-
-router.delete('/delete/:product', (req, res, next) => {});
+router.delete('/delete/:product', (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.use((err, req, res) => {
   global.logger.error(`${req.method} ${req.baseUrl} ${err.message}`);
