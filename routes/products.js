@@ -132,8 +132,19 @@ router.get('/:name', async (req, res, next) => {
       (prd) => prd.title === req.params.name
     );
     if (index === -1) {
-      throw new Error('Category not found.');
+      throw new Error('Product not found.');
     }
+
+    //Considering its not permitted to deliver the id to the user
+    const product = {
+      title: products.products[index].title,
+      description: products.products[index].description,
+      price: products.products[index].price,
+      category: products.products[index].category,
+    };
+
+    global.logger.info(`GET - /products/:name - ${product.title}`);
+    res.send(product);
   } catch (err) {
     next(err);
   }
