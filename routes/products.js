@@ -150,8 +150,26 @@ router.get('/:name', async (req, res, next) => {
   }
 });
 
-router.get('/products/:category', (req, res, next) => {
+router.get('/:category', async (req, res, next) => {
   try {
+    const products = await readFile(global.fileProducts);
+
+    const filteredProds = products.products.filter(
+      (prd) => prd.category === req.params.category
+    );
+
+    //Considering its not permitted to deliver the id to the user
+    const mappedFilteredProds = filteredProds.map((prod) => {
+      return {
+        title: prod.title,
+        description: prod.description,
+        price: prod.price,
+        category: prod.category,
+      };
+    });
+
+    global.logger.info(`GET - /products/:category - ${req.params.category}`);
+    res.send(mappedFilteredProds);
   } catch (err) {
     next(err);
   }
