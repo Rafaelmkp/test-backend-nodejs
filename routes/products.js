@@ -41,6 +41,9 @@ router.post('/new-product', async (req, res, next) => {
     products.nextId++;
     await writeFile(global.fileProducts, JSON.stringify(products, null, 2));
 
+    global.logger.info(
+      `POST /products/new-product - ${JSON.stringify(newProduct)}`
+    );
     const resString = `New Product - Title: ${newProduct.title}, 
       Description: ${newProduct.description}, Price: ${newProduct.price}, 
       Category: ${newProduct.category}.`;
@@ -69,6 +72,9 @@ router.post('/new-category', async (req, res, next) => {
     categories.nextId++;
     await writeFile(global.fileCategories, JSON.stringify(categories, null, 2));
 
+    global.logger.info(
+      `POST /products/new-category ${JSON.stringify(newCategory)}`
+    );
     const resString = `New category added - Name: ${newCategory.name}`;
     res.send(resString);
   } catch (err) {
