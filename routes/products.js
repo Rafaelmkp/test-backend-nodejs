@@ -182,7 +182,7 @@ router.patch('/edit-product/:title', async (req, res, next) => {
   }
 });
 
-router.delete('/delete/:product', (req, res, next) => {
+router.delete('/delete/:title', (req, res, next) => {
   try {
   } catch (err) {
     next(err);
