@@ -124,12 +124,12 @@ router.get('/all', async (_req, res, next) => {
   }
 });
 
-router.get('/:name', async (req, res, next) => {
+router.get('/:title', async (req, res, next) => {
   try {
     const products = await readFile(global.fileProducts);
 
     const index = products.products.findIndex(
-      (prd) => prd.title === req.params.name
+      (prd) => prd.title === req.params.title
     );
     if (index === -1) {
       throw new Error('Product not found.');
@@ -175,8 +175,7 @@ router.get('/:category', async (req, res, next) => {
   }
 });
 
-//suggestion: use patch nd put
-router.patch('/edit-product/:name', (req, res, next) => {
+router.patch('/edit-product/:title', async (req, res, next) => {
   try {
   } catch (err) {
     next(err);
