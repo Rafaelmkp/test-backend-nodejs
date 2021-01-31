@@ -1,5 +1,5 @@
 import express from 'express';
-import { promises as fs, write } from 'fs';
+import { promises as fs, read, write } from 'fs';
 
 const { readFile, writeFile } = fs;
 const router = express.Router();
@@ -210,8 +210,27 @@ router.patch('/edit-product', async (req, res, next) => {
   }
 });
 
-router.delete('/delete/:title', (req, res, next) => {
+router.delete('/delete/:title', async (req, res, next) => {
   try {
+    if (!req.params.title) {
+      throw new Error('Missing required parameters.');
+    }
+
+    const products = JSON.parse(await readFile(global.fileProducts));
+
+    const isIndex = products.products.findIndex((prd) => {
+      prd.title === req.params.title;
+    });
+    if (index === -1) {
+      throw new Error('Product not found.');
+    }
+    const deletedProduct = products.products[isIndex];
+
+    products.products = products.products.filter((prd) => prd.id !== isIndex);
+
+    await writeFile(global.fileProducts, JSON.stringify(products, null, 2));
+    global.logger.info(`DELETE /product/:title - ${req.params.title}`);
+    res.send(`Successfully deleted product ${JSON.stringify(deletedProduct)}`);
   } catch (err) {
     next(err);
   }
